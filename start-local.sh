@@ -2,6 +2,9 @@
 
 echo "🚀 Starting WhatsApp AI Local Development..."
 
+# Use Node.js 20
+export PATH="/usr/local/opt/node@20/bin:$PATH"
+
 # Function to cleanup processes on exit
 cleanup() {
     echo "🛑 Stopping all services..."
@@ -23,6 +26,7 @@ sleep 2
 # Start WhatsApp server in background
 echo "💬 Starting WhatsApp server on http://localhost:3000..."
 cd whatsapp-server
+echo "Using Node.js version: $(node -v)"
 node dist/main.js &
 WHATSAPP_PID=$!
 

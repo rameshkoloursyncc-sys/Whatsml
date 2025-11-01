@@ -63,21 +63,21 @@ echo "Routes cached: $([ -f bootstrap/cache/routes-v7.php ] && echo 'Yes' || ech
 echo "Views cached: $([ -d storage/framework/views ] && echo 'Yes' || echo 'No')"
 
 echo ""
-echo "=== Nginx Configuration Test ==="
-if command -v nginx >/dev/null 2>&1; then
-    echo "Testing nginx configuration..."
-    sudo nginx -t 2>&1 || echo "❌ Nginx config test failed"
+echo "=== Apache Configuration Test ==="
+if command -v httpd >/dev/null 2>&1; then
+    echo "Testing Apache configuration..."
+    sudo httpd -t 2>&1 || echo "❌ Apache config test failed"
 else
-    echo "Nginx not found or not accessible"
+    echo "Apache not found or not accessible"
 fi
 
 echo ""
 echo "=== Quick Fix Suggestions ==="
 echo "1. Clear Laravel caches: php artisan config:clear && php artisan view:clear"
 echo "2. Rebuild assets: npm run build"
-echo "3. Check nginx config: sudo nginx -t"
-echo "4. Restart services: sudo systemctl restart nginx php-fpm"
-echo "5. Check file permissions: sudo chown -R nginx:nginx /var/www/whatsparrot.in"
+echo "3. Check Apache config: sudo httpd -t"
+echo "4. Restart services: sudo systemctl restart httpd php-fpm"
+echo "5. Check file permissions: sudo chown -R apache:apache /var/www/whatsparrot.in"
 
 echo ""
 echo "🔍 Diagnosis complete!"

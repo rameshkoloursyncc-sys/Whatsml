@@ -48,29 +48,28 @@ php artisan view:cache
 
 # Step 5: Fix file permissions
 print_status "Setting correct file permissions..."
-sudo chown -R nginx:nginx /var/www/whatsparrot.in 2>/dev/null || print_warning "Could not set nginx ownership"
+sudo chown -R apache:apache /var/www/whatsparrot.in 2>/dev/null || print_warning "Could not set apache ownership"
 sudo chmod -R 755 /var/www/whatsparrot.in
 sudo chmod -R 775 /var/www/whatsparrot.in/storage
 sudo chmod -R 775 /var/www/whatsparrot.in/bootstrap/cache
 sudo chmod -R 755 /var/www/whatsparrot.in/public/build*
 
-# Step 6: Update nginx configuration
-print_status "Updating nginx configuration..."
-if [ -f "nginx-whatsapp-ai.conf" ]; then
-    print_status "Copying nginx configuration..."
-    sudo cp nginx-whatsapp-ai.conf /etc/nginx/sites-available/whatsapp-ai 2>/dev/null || \
-    sudo cp nginx-whatsapp-ai.conf /etc/nginx/conf.d/whatsapp-ai.conf 2>/dev/null || \
-    print_warning "Could not copy nginx config - please copy manually"
+# Step 6: Update Apache configuration
+print_status "Updating Apache configuration..."
+if [ -f "apache-whatsapp-ai.conf" ]; then
+    print_status "Copying Apache configuration..."
+    sudo cp apache-whatsapp-ai.conf /etc/httpd/conf.d/whatsapp-ai.conf 2>/dev/null || \
+    print_warning "Could not copy Apache config - please copy manually"
 fi
 
-# Step 7: Test nginx configuration
-print_status "Testing nginx configuration..."
-sudo nginx -t && print_status "Nginx config is valid" || print_error "Nginx config has errors"
+# Step 7: Test Apache configuration
+print_status "Testing Apache configuration..."
+sudo httpd -t && print_status "Apache config is valid" || print_error "Apache config has errors"
 
 # Step 8: Restart services
 print_status "Restarting services..."
 sudo systemctl restart php-fpm
-sudo systemctl restart nginx
+sudo systemctl restart httpd
 pm2 restart whatsapp-server 2>/dev/null || print_warning "Could not restart PM2 processes"
 
 # Step 9: Verify build files
@@ -97,7 +96,7 @@ echo ""
 print_warning "Next steps:"
 print_warning "1. Test your website: https://whatsparrot.in"
 print_warning "2. Check browser developer tools for any 404 errors on CSS files"
-print_warning "3. If issues persist, check nginx error logs: sudo tail -f /var/log/nginx/error.log"
+print_warning "3. If issues persist, check Apache error logs: sudo tail -f /var/log/httpd/error_log"
 print_warning "4. Verify your .env file has correct APP_URL=https://whatsparrot.in"
 
 echo ""
@@ -105,4 +104,4 @@ print_status "Common troubleshooting:"
 echo "- If CSS still not loading, check browser network tab for failed requests"
 echo "- Ensure your domain DNS is pointing to the correct server"
 echo "- Check if SSL certificate is properly configured"
-echo "- Verify nginx is serving static files from the correct document root"
+echo "- Verify Apache is serving static files from the correct document root"

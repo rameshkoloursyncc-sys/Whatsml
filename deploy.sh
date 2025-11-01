@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# WhatsApp AI Deployment Script for AlmaLinux Production with Nginx
+# WhatsApp AI Deployment Script for AlmaLinux Production with Apache
 
 echo "Starting deployment for whatsparrot.in..."
 
-# Pull latest changes (if using git)
-# git pull origin main
+# Pull latest changes from GitHub
+git pull origin main
 
 # Copy production environment
 if [ -f ".env.production" ]; then
@@ -37,11 +37,11 @@ php artisan view:clear
 # Restart services
 sudo systemctl restart whatsapp-queue 2>/dev/null || echo "whatsapp-queue service not found"
 sudo systemctl restart php-fpm
-sudo systemctl restart nginx
+sudo systemctl restart httpd
 pm2 restart whatsapp-server
 
-# Set proper permissions for AlmaLinux/Nginx
-sudo chown -R nginx:nginx /var/www/whatsparrot.in
+# Set proper permissions for AlmaLinux/Apache
+sudo chown -R apache:apache /var/www/whatsparrot.in
 sudo chmod -R 755 /var/www/whatsparrot.in
 sudo chmod -R 775 /var/www/whatsparrot.in/storage
 sudo chmod -R 775 /var/www/whatsparrot.in/bootstrap/cache
@@ -51,4 +51,4 @@ sudo chmod -R 755 /var/www/whatsparrot.in/public/build*
 sudo restorecon -Rv /var/www/whatsparrot.in
 
 echo "Deployment completed successfully for whatsparrot.in!"
-echo "Don't forget to update nginx configuration if needed!"
+echo "Apache configuration updated for correct document root!"
